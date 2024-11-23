@@ -3,7 +3,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Attach debounced search function to the input field
   const searchInput = document.getElementById("searchInput");
-  const debouncedSearch = debounce(searchMovies, 300);
+  const debouncedSearch = debounce(function () {
+    searchMovies(searchInput.value);
+  }, 300);
+
   searchInput.addEventListener("input", debouncedSearch);
 });
 
@@ -19,7 +22,7 @@ function fetchmovies() {
     randomSearchTerms[Math.floor(Math.random() * randomSearchTerms.length)];
 
   // Fetch movie data from OMDB API with a random search term
-  fetch(`https://www.omdbapi.com/?i=tt3896198&apikey=${apiKey}&s=${randomTerm}`)
+  fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${randomTerm}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.Search && data.Search.length > 0) {
@@ -35,21 +38,16 @@ function fetchmovies() {
     });
 }
 
-function searchMovies() {
+function searchMovies(query) {
   const apiKey = "88cdb114";
-  const searchInput = document
-    .getElementById("searchInput")
-    .value.toLowerCase();
   const MoviesGrid = document.getElementById("MoviesGrid");
 
-  if (searchInput.trim() !== "") {
+  if (query.trim() !== "") {
     // Display loading message
     MoviesGrid.innerHTML = "<p>Loading movies...</p>";
 
     // Fetch movie data from OMDB API
-    fetch(
-      `https://www.omdbapi.com/?i=tt3896198&apikey=${apiKey}&s=${searchInput}`
-    )
+    fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${query}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.Search && data.Search.length > 0) {
@@ -89,12 +87,11 @@ function moviestoshow(movies) {
   });
 }
 
-// Proper debounce function
+// Debounce function
 function debounce(func, delay) {
   let timerId;
   return function (...args) {
-    const context = this; // Retain `this` context
     clearTimeout(timerId);
-    timerId = setTimeout(() => func.apply(context, args), delay);
+    timerId = setTimeout(() => func(...args), delay);
   };
 }
