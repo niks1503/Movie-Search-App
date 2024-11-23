@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function fetchmovies() {
   // omdb API key
-  const apiKey = "YOUR_OMDB_API_KEY";
+  const apiKey = "88cdb114";
 
   // MoviesGrid element
   const MoviesGrid = document.getElementById("MoviesGrid");
@@ -18,8 +18,7 @@ function fetchmovies() {
 
   // Fetch movie data from OMDB API with
   // a default search term (e.g., 'popular')
-  fetch(`http://www.omdbapi.com/?apikey=
-          ${apiKey}&s=${randomTerm}`)
+  fetch(`https://www.omdbapi.com/?i=tt3896198&apikey=${apiKey}&s=${randomTerm}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.Search && data.Search.length > 0) {
@@ -38,7 +37,9 @@ function fetchmovies() {
 function searchMovies() {
   // omdb API key
   const apiKey = "88cdb114";
-  const searchInput = document.getElementById("searchInput").value;
+  const searchInput = document
+    .getElementById("searchInput")
+    .value.toLowerCase();
 
   // MoviesGrid element
   const MoviesGrid = document.getElementById("MoviesGrid");
@@ -49,8 +50,9 @@ function searchMovies() {
     MoviesGrid.innerHTML = "<p>Loading movies...</p>";
 
     // Fetch movie data from OMDB API
-    fetch(`http://www.omdbapi.com/?apikey=
-             ${apiKey}&s=${searchInput}`)
+    fetch(
+      `https://www.omdbapi.com/?i=tt3896198&apikey=${apiKey}&s=${searchInput}`
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.Search && data.Search.length > 0) {
