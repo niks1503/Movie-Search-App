@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
   fetchmovies();
+
+  // Attach debounced search function to the input field
+  const searchInput = document.getElementById("searchInput");
+  const debouncedSearch = debounce(searchMovies, 300);
+  searchInput.addEventListener("input", debouncedSearch);
 });
 
 function fetchmovies() {
-  // omdb API key
   const apiKey = "88cdb114";
-
-  // MoviesGrid element
   const MoviesGrid = document.getElementById("MoviesGrid");
 
   // Display loading message
@@ -16,8 +18,7 @@ function fetchmovies() {
   const randomTerm =
     randomSearchTerms[Math.floor(Math.random() * randomSearchTerms.length)];
 
-  // Fetch movie data from OMDB API with
-  // a default search term (e.g., 'popular')
+  // Fetch movie data from OMDB API with a random search term
   fetch(`https://www.omdbapi.com/?i=tt3896198&apikey=${apiKey}&s=${randomTerm}`)
     .then((response) => response.json())
     .then((data) => {
@@ -35,16 +36,12 @@ function fetchmovies() {
 }
 
 function searchMovies() {
-  // omdb API key
   const apiKey = "88cdb114";
   const searchInput = document
     .getElementById("searchInput")
     .value.toLowerCase();
-
-  // MoviesGrid element
   const MoviesGrid = document.getElementById("MoviesGrid");
 
-  // Search result validation
   if (searchInput.trim() !== "") {
     // Display loading message
     MoviesGrid.innerHTML = "<p>Loading movies...</p>";
@@ -67,7 +64,7 @@ function searchMovies() {
           "<p>Error fetching movies. Please try again later.</p>";
       });
   } else {
-    alert("Enter a movie title then search!");
+    MoviesGrid.innerHTML = "<p>Please enter a movie title!</p>";
   }
 }
 
@@ -90,4 +87,14 @@ function moviestoshow(movies) {
 
     MoviesGrid.appendChild(movieCard);
   });
+}
+
+// Proper debounce function
+function debounce(func, delay) {
+  let timerId;
+  return function (...args) {
+    const context = this; // Retain `this` context
+    clearTimeout(timerId);
+    timerId = setTimeout(() => func.apply(context, args), delay);
+  };
 }
